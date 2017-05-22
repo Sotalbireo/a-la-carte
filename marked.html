@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+	<script src="./marked-with-katex.js"></script>
+</head>
+<body>
+<pre id="in">
+# test
+
+C is twice of A; $c=2a$.
+
+_A_ plus **B** minus ~~C~~ twice D by E equal G/F; $a+b_1-C_2*D/E=\frac{G}{F}$
+
+$$
+A plus B minus C twice D by E equal G/F; a+b_1-C_2*D/E=\frac{G}{F}
+$$
+\[
+  \frac{\pi}{2} =
+  \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
+  \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
+  \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
+]\
+
+
+</pre>
+<hr>
+<div id="out"></div>
+<script>
+	document.addEventListener('DOMContentLoaded', (function(){
+		document.getElementById('out').innerHTML = marked(document.getElementById('in').innerHTML)
+	}));
+</script>
+</body>
+</html>
