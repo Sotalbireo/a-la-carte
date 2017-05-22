@@ -3,6 +3,16 @@
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
  * https://github.com/chjj/marked
  */
+/**
+ * marked with KaTex
+ * Arranged by Sota Sasaki. (Licenses Inheritanced)
+ * https://github.com/sotalbireo
+ */
+/**
+ * KaTeX
+ * KaTeX is a fast, easy-to-use JavaScript library for TeX math rendering on the web.
+ * https://github.com/Khan/KaTeX
+ */
 
 ;(function() {
 
@@ -23,7 +33,8 @@ var block = {
   html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
-  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
+  mathjax: /^ *(\${2,}|\\\[) *\n([\s\S]*?)\s*(\1|\]\\) *(?:\n+|$)/,
+  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def|mathjax))+)\n*/,
   text: /^[^\n]+/
 };
 
@@ -62,6 +73,7 @@ block.paragraph = replace(block.paragraph)
   ('blockquote', block.blockquote)
   ('tag', '<' + block._tag)
   ('def', block.def)
+  ('mathjax', block.mathjax)
   ();
 
 /**
@@ -411,6 +423,16 @@ Lexer.prototype.token = function(src, top, bq) {
       continue;
     }
 
+    // mathjax
+    if (cap = this.rules.mathjax.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'mathjax',
+        text: cap[2]
+      });
+      continue;
+    }
+
     // top-level paragraph
     if (top && (cap = this.rules.paragraph.exec(src))) {
       src = src.substring(cap[0].length);
@@ -460,7 +482,8 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+  imathjax: /^\$+\s*([\s\S]*?[^\$])\s*\$(?!\$)/,
+  text: /^[\s\S]+?(?=[\\\$<!\[_*`]| {2,}\n|$)/
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -679,6 +702,13 @@ InlineLexer.prototype.output = function(src) {
       continue;
     }
 
+    // imathjax
+    if (cap = this.rules.imathjax.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.imathjax(this.output(cap[1]));
+      continue;
+    }
+
     // text
     if (cap = this.rules.text.exec(src)) {
       src = src.substring(cap[0].length);
@@ -845,6 +875,17 @@ Renderer.prototype.tablecell = function(content, flags) {
   return tag + content + '</' + type + '>\n';
 };
 
+Renderer.prototype.mathjax = function(text) {
+  let mathjax;
+  try {
+    mathjax = katex? '<div>' + katex.renderToString(text, {displayMode: true}) + '</div>' : '<pre><code>\n' + text + '\n</code></pre>';
+  } catch(e) {
+    console.error(e);
+    mathjax = '<pre><code>\n' + text + '\n</code></pre>';
+  }
+  return mathjax;
+}
+
 // span level renderer
 Renderer.prototype.strong = function(text) {
   return '<strong>' + text + '</strong>';
@@ -899,6 +940,17 @@ Renderer.prototype.image = function(href, title, text) {
 Renderer.prototype.text = function(text) {
   return text;
 };
+
+Renderer.prototype.imathjax = function(text) {
+  let mathjax;
+  try {
+    mathjax = katex? katex.renderToString(text) : '<code>' + text + '</code>';
+  } catch(e) {
+    console.error(e);
+    mathjax = '<code>' + text + '</code>';
+  }
+  return mathjax;
+}
 
 /**
  * Parsing & Compiling
@@ -1074,6 +1126,9 @@ Parser.prototype.tok = function() {
     case 'paragraph': {
       return this.renderer.paragraph(this.inline.output(this.token.text));
     }
+    case 'mathjax': {
+      return this.renderer.mathjax(this.token.text);
+    }
     case 'text': {
       return this.renderer.paragraph(this.parseText());
     }
@@ -1094,7 +1149,7 @@ function escape(html, encode) {
 }
 
 function unescape(html) {
-	// explicitly match decimal, hex, and named HTML entities 
+	// explicitly match decimal, hex, and named HTML entities
   return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, function(_, n) {
     n = n.toLowerCase();
     if (n === 'colon') return ':';
