@@ -4,11 +4,13 @@
 // Forked from: William Orr <https://github.com/worr>
 // Definitions: https://github.com/sotalbireo/a-la-carte/marked-dts
 
-export = Marked;
-export as namespace Marked;
-declare var marked: Marked.Static;
+export = Marked
+export as namespace Marked
+// export = Renderer
 
 declare namespace Marked {
+
+
 	interface Renderer {
 		code(code: string, language: string, escaped: boolean): string;
 		blockquote(quote: string): string;
@@ -123,7 +125,6 @@ declare namespace Marked {
 		xhtml?: boolean;
 	}
 
-	interface Static {
 		/**
 		 * Compiles markdown to HTML.
 		 *
@@ -132,6 +133,8 @@ declare namespace Marked {
 		 * @return String of compiled HTML
 		 */
 		(src: string, callback: Function): string;
+
+	interface Static {
 
 		/**
 		 * Compiles markdown to HTML.
@@ -193,45 +196,11 @@ declare namespace Marked {
 		parse(source: any[]): string
 	}
 
+	interface BlockGrammar {
 
-	interface blockLevelGrammar {
-		newline?: RegExp
-		code?: RegExp
-		fences?: RegExp
-		hr?: RegExp
-		heading?: RegExp
-		nptable?: RegExp
-		lheading?: RegExp
-		blockquote?: RegExp
-		list?: RegExp
-		html?: RegExp
-		def?: RegExp
-		table?: RegExp
-		paragraph?: RegExp
-		text?: RegExp
-
-		bullet?: RegExp
-		item?: RegExp
-		_tag?: RegExp
-
-		normal?: RegExp
-		gfm?: RegExp
 	}
+	interface GFMGrammar extends BlockGrammar {
 
-
-
-	/**
-	 * ES6 Class
-	 */
-
-
-	class Component {
 	}
-
-
-
-	/**
-	 * Helper
-	 */
 
 }
