@@ -6,7 +6,6 @@
 
 export = Marked
 export as namespace Marked
-// export = Renderer
 
 declare namespace Marked {
 
