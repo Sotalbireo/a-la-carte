@@ -33,7 +33,8 @@ var block = {
   html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
-  mathjax: /^ *(\${2,}|\\\[) *\n([\s\S]*?)\s*(\1|\]\\) *(?:\n+|$)/,
+  mathjax: /^(\${2})\n([\s\S]*?)\s*(\1)(?:\n+|$)/,
+  mathja2: /^(\\\[)\n([\s\S]*?)\s*(\]\\)(?:\n+|$)/,
   paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def|mathjax))+)\n*/,
   text: /^[^\n]+/
 };
@@ -424,7 +425,7 @@ Lexer.prototype.token = function(src, top, bq) {
     }
 
     // mathjax
-    if (cap = this.rules.mathjax.exec(src)) {
+    if (cap = this.rules.mathjax.exec(src) || this.rules.mathja2.exec(src)) {
       src = src.substring(cap[0].length);
       this.tokens.push({
         type: 'mathjax',
