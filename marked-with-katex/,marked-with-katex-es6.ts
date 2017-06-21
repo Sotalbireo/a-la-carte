@@ -57,15 +57,15 @@ class Marked {
 	private postConstructor(src:string, opt?:any, callback?:Function) {
 		if (callback || typeof opt === 'function') {
 			if (!callback) {
-				callback = opt;
+				callback = opt as Function;
 				opt = null;
 			}
 
 			opt = Marked.merge({}, Marked.defaults, opt || {});
 
 			let highlight = opt.highlight
-				, tokens
-				, pending
+				, tokens:any
+				, pending:any
 				, i = 0;
 
 			try {
@@ -79,7 +79,7 @@ class Marked {
 			let done = function(err?) {
 				if (err) {
 					opt.highlight = highlight;
-					return callback(err);
+					return callback!(err);
 				}
 
 				let out;
@@ -166,22 +166,22 @@ class Marked {
 		});
 	}
 
-	static replace(regex, opt?): any {
+	static replace(regex:RegExp, opt?:string): (name:any, val:RegExp|string)=>RegExp|any {
 		let _regex = regex.source;
 		opt = opt || '';
-		return function self(name, val) {
+		return function self(name:any, val:RegExp|string) {
 			if (!name) return new RegExp(_regex, opt);
-			val = val.source || val;
-			val = val.replace(/(^|[^\[])\^/g, '$1');
+			val = (val as RegExp).source || val;
+			val = (val as string).replace(/(^|[^\[])\^/g, '$1');
 			_regex = _regex.replace(name, val);
 			return self;
 		};
 	}
 
-	static merge(...obj): any {
+	static merge(...obj: any[]): any {
 		let i = 1
 			, target
-			, key;
+			, key:any;
 		for (; i < obj.length; i++) {
 			target = obj[i];
 			for (key in target) {
@@ -323,9 +323,9 @@ namespace Marked {
 		paragraph: /^/,
 		heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/
 	});
-	block.gfm.paragraph = Marked.replace(block.paragraph)
+	block.gfm!.paragraph = Marked.replace(block.paragraph)
 		('(?!', '(?!'
-			+ (block.gfm.fences as RegExp).source.replace('\\1', '\\2') + '|'
+			+ (block.gfm!.fences as RegExp).source.replace('\\1', '\\2') + '|'
 			+ block.list.source.replace('\\1', '\\3') + '|')
 		();
 
@@ -417,7 +417,7 @@ namespace Marked {
 	});
 	inline.breaks = Marked.merge({}, inline.gfm, {
 		br: Marked.replace(inline.br)('{2,}', '*')(),
-		text: Marked.replace(inline.gfm.text)('{2,}', '*')()
+		text: Marked.replace(inline.gfm!.text)('{2,}', '*')()
 	});
 
 

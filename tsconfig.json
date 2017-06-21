@@ -25,9 +25,10 @@
         "target": "es6"
     },
     "include": [
-        "src/**/*.ts"
+        "**/*.ts"
     ],
     "exclude": [
-        "**/*.d.ts"
+        "**/*.d.ts",
+        "**/,*.ts"
     ]
 }
