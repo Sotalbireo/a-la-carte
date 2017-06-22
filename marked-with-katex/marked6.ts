@@ -8,12 +8,8 @@ class Marked {
 	private inline:any
 	private options:any
 	Renderer
-	constructor(mdStr: string, options?: object, callback?: Function) {
-		this.setBlockExp()
-		this.setInlineExp()
-		this.setOptions()
-
-	}
+	Lexer
+	Parser
 	setBlockExp = () => {
 		this.block = {}
 	}
@@ -23,30 +19,50 @@ class Marked {
 	setOptions = () => {
 		this.options = {}
 	}
-	static render(){
-		const m = new Marked
-		return m.render()
+	static render = (markdownString: string, options?: object, callback?: Function) => {
+		let opts
+		if(typeof options === 'function') {
+			callback = options
+			opts = {}
+		}
+		opts = Marked.merge({}, Marked.defaults, opts)
+		const m = new Marked()
+		return m.render(markdownString, opts, callback)
 	}
 	render = () => {
+		try {
+			return Parser.parse(Lexer.lex(src, opt), opt);
+		} catch (e) {
+			e.message += '\nPlease report this to https://github.com/sotalbireo/a-la-carte.';
+			if (this.options.silent) {
+				return `<p>An error occured:</p><pre>${Marked.escape(e.message + '', true)}</pre>`;
+			}
+			throw e;
+		}
+	}
+	constructor(options?: object) {
+		this.setBlockExp()
+		this.setInlineExp()
+		this.setOptions()
+
+
 
 	}
 
 
 
-	escape = () => {}
-	unescape = () => {}
-	replace = () => {}
-	merge = () => {}
+	static escape = () => {}
+	static unescape = () => {}
+	static replace = () => {}
+	static merge = () => {}
 }
 
 
 
 
-Marked.Renderer = class Renderer {
+
+Marked.Renderer = class {
 	private options
-	constructor(opts) {
-		this.options = opts
-	}
 	private code = () => {}
 	private blockquote = () => {}
 	private html = () => {}
@@ -67,22 +83,20 @@ Marked.Renderer = class Renderer {
 	private _link = () => {}
 	private _image = () => {}
 	private _text = () => {}
+	constructor(opts) {
+		this.options = opts
+	}
 }
 
-namespace Marked {
+
+
+Marked.Lexer = class {}
 
 
 
-
-
-
-	class Lexer {
-
-	}
-
-
-
-	class Parser {
-
-	}
+Marked.Parser = class {
+	private tokens
+	private token
+	private options
+	
 }
