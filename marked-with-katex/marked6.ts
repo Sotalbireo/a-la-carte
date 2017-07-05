@@ -7,7 +7,7 @@ class Marked {
 	private block:any
 	private inline:any
 	private options:any
-	Renderer
+	Renderer :Renderer
 	Lexer
 	Parser
 	setBlockExp = () => {
@@ -31,7 +31,7 @@ class Marked {
 	}
 	render = () => {
 		try {
-			return Parser.parse(Lexer.lex(src, opt), opt);
+			return Marked.Parser.parse(Lexer.lex(src, opt), opt);
 		} catch (e) {
 			e.message += '\nPlease report this to https://github.com/sotalbireo/a-la-carte.';
 			if (this.options.silent) {
@@ -51,8 +51,20 @@ class Marked {
 
 
 
-	static escape = () => {}
-	static unescape = () => {}
+	static escape = (html:string, encode:boolean, map={'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}) => html.replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;').replace(/[<>"']/g, (m:'<'|'>'|'"'|"'")=>map[m])
+	static unescape = (html:string) => {
+		// explicitly match decimal, hex, and named HTML entities
+		return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, (_, n) => {
+			n = n.toLowerCase()
+			if (n === 'colon') return ':'
+			if (n.charAt(0) === '#') {
+				return n.charAt(1) === 'x'
+					? String.fromCharCode(parseInt(n.substring(2), 16))
+					: String.fromCharCode(+n.substring(1))
+			}
+			return ''
+		})
+	}
 	static replace = () => {}
 	static merge = () => {}
 }
@@ -60,8 +72,10 @@ class Marked {
 
 
 
-
-Marked.Renderer = class {
+/**
+ * Super renderer class
+ */
+class Renderer {
 	private options
 	private code = () => {}
 	private blockquote = () => {}
@@ -89,14 +103,69 @@ Marked.Renderer = class {
 }
 
 
+/**
+ * Lexer
+ */
+Marked.Lexer = class {
+	private tokens
+	private options
+	private rules
 
-Marked.Lexer = class {}
+}
 
 
-
+/**
+ * Parser
+ */
 Marked.Parser = class {
 	private tokens
 	private token
 	private options
-	
+	static parse = (text:any[]) => {
+		const p = new Marked.Parser()
+		return p.parse(text)
+	}
+	parse = (src:any[]) => {
+		this.tokens = src.reverse()
+		let out = ''
+		while(this.next()) {
+			out += this.tok()
+		}
+		return out
+	}
+	/**
+	 * Next token
+	 */
+	next = () => {
+		return this.token = this.tokens.pop()
+	}
+	/**
+	 * Preview next token
+	 */
+	peek = () => {
+		return this.tokens[this.tokens.length-1] || 0
+	}
+	/**
+	 * Parse text tokens
+	 */
+	parseText = () => {
+		let body = this.token.text
+		while(this.peek().type === 'text') {
+			body += `\n${this.next().text}`
+		}
+		return this.inline.output(body)
+	}
+	/**
+	 * Parse current token
+	 */
+	tok = () => {
+		switch(this.token.type) {
+			case 'space':
+				return ''
+			case 'hr':
+				return this.renderer.hr()
+			default:
+				return ''
+		}
+	}
 }
