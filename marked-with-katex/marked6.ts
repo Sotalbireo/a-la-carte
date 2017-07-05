@@ -66,8 +66,21 @@ class Marked {
 		})
 	}
 	static replace = () => {}
-	static merge = () => {}
+	static merge = (...obj:any[]) => {
+		let targ:any, key:any;
+		for(let i = 1; i < obj.length; ++i) {
+			targ = obj[i]
+			for(key in targ) {
+				if((targ as object).hasOwnProperty(key)) {
+					obj[0][key] = targ[key]
+				}
+			}
+		}
+		return obj[0] as object
+	}
 }
+
+
 
 
 
