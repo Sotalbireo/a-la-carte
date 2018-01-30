@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css" integrity="sha256-5+W3JHnvGYIJkVxUBsw+jBi9+pOlu9enPX3vZapXj5M=" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+	<script src="./marked-with-katex.js"></script>
+	<style>
+		.ui.form textarea:not([rows]){ max-height: 100%; }
+	</style>
+</head>
+<body class="ui container" style="height:100vh;position:relative;overflow:hidden">
+<header class="ui basic segment">
+	<h1 class="ui dividing header">Mar-k-aTeX - <small>Realtime rendering demo</small></h1>
+</header>
+<section class="ui equal width grid">
+	<main class="column">
+		<form class="ui form" style="height:100%">
+			<textarea id="Editor" onkeyup="render(this.value);" wrap="soft" style="height:100%">
+# Welcome to this Demo page!
+
+this page is [Mar-k-aTeX](https://github.com/Sotalbireo/a-la-carte/tree/master/marked-with-katex)'s real-time rendering demo.
+
+the samples is above.
+
+---
+
+C is twice of A; $C=2A$.
+
+_A_ plus **B** minus ~~C~~ twice D by E equal G/F; $a+b_1-C_2*D/E=\frac{G}{F}$
+
+$$
+A plus B minus C twice D by E equal G/F; a+b_1-C_2*D/E=\frac{G}{F}
+$$
+\[
+  \frac{\pi}{2} =
+  \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
+  \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
+  \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
+]\
+</textarea>
+		</form>
+	</main>
+	<article class="column" style="overflow-x:scroll">
+		<div id="Parsed"></div>
+	</article>
+</section>
+<script>
+	const render = (str) => {
+		document.getElementById('Parsed').innerHTML = marked(str, {
+			breaks: true,
+			smartypants: true
+		});
+	}
+	document.addEventListener('DOMContentLoaded', ()=>{
+		let sec = document.getElementsByTagName('section')[0];
+		sec.style.height = window.innerHeight - sec.getBoundingClientRect().top + 'px';
+
+		render(document.getElementById('Editor').value);
+	});
+</script>
+</body>
+</html>

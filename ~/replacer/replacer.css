@@ -1,0 +1,27 @@
+#content {
+  line-height: 1.2;
+  position: relative;
+  vertical-align: baseline; }
+
+.caret {
+  -webkit-animation: caret 0.9s step-end infinite alternate;
+          animation: caret 0.9s step-end infinite alternate;
+  background-color: black;
+  content: '';
+  display: inline-block;
+  height: 1.2em;
+  position: relative;
+  vertical-align: text-top;
+  width: 1ex; }
+
+@-webkit-keyframes caret {
+  0% {
+    opacity: 0; }
+  50% {
+    opacity: 1; } }
+
+@keyframes caret {
+  0% {
+    opacity: 0; }
+  50% {
+    opacity: 1; } }

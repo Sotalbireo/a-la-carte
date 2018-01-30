@@ -1,35 +1,16 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "alwaysStrict": true,
-        "declaration": true,
-        "experimentalDecorators": true,
-        "forceConsistentCasingInFileNames": true,
-        "lib": [
-            "dom",
-            "es2017"
-        ],
-        "listEmittedFiles": true,
-        "listFiles": false,
-        "newLine": "lf",
-        "noEmitOnError": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "preserveConstEnums": true,
-        "pretty": false,
-        "removeComments": false,
-        "strictNullChecks": true,
-        "sourceMap": false,
-        "target": "es6"
-    },
-    "include": [
-        "**/*.ts"
-    ],
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "awesomeTypescriptLoaderOptions": {
     "exclude": [
-        "**/*.d.ts",
-        "**/,*.ts"
+      "**/*.d.ts"
     ]
+  }
 }

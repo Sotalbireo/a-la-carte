@@ -1,0 +1,47 @@
+{
+  "author": "Kyohei SASAKI",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sotalbireo/a-la-carte.git"
+  },
+  "scripts": {
+    "build": "webpack --color",
+    "clean": "npm-run-all --parallel clean:*",
+    "clean:dest": "del-cli dist/**/*",
+    "devel": "webpack-dev-server --color",
+    "tslint": "tslint --type-check --project ./ './src/**/*.{ts,tsx}'",
+    "publish": "npm-run-all clean webpack:publish",
+    "webpack:publish": "webpack --env.production -p --display errors-only"
+  },
+  "devDependencies": {
+    "@types/copy-webpack-plugin": "^4.0.1",
+    "@types/extract-text-webpack-plugin": "^3.0.0",
+    "@types/globule": "^1.1.3",
+    "@types/webpack": "^3.8.3",
+    "apply-loader": "^2.0.0",
+    "autoprefixer": "^7.2.4",
+    "awesome-typescript-loader": "^3.4.1",
+    "copy-webpack-plugin": "^4.3.1",
+    "css-loader": "^0.28.8",
+    "del-cli": "^1.1.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "globule": "^1.2.0",
+    "html-loader": "^0.5.4",
+    "node-sass": "^4.7.2",
+    "npm-run-all": "^4.1.2",
+    "postcss": "^6.0.16",
+    "postcss-loader": "^2.0.10",
+    "pug": "^2.0.0-rc.4",
+    "pug-html-loader": "^1.1.5",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.1",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.9.1",
+    "tslint-config-airbnb": "^5.4.2",
+    "tslint-loader": "^3.5.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.1"
+  }
+}
