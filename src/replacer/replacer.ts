@@ -1,35 +1,55 @@
 const init = () => {
-	// if (location.pathname !==
-	// 	'/page/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8')
-	// 	return;
 	const body = document.getElementById('content')!;
 	const caret = '<span class="caret"></span>';
-	const sleep = async function (delay: number) {
-		return new Promise(resolve => {
-			setTimeout(resolve, delay);
-		});
-	};
 	const typing = async function (strs: string, timing = 80) {
-		const chars = strs.split('');
-		const pushChar = (char: string, target: HTMLElement) => {
-			target.innerHTML += char + caret;
+		const push = (char: string, _target: HTMLElement) => {
+			// target.innerHTML = stdout + char + caret;
+			console.log(stdout + char + caret);
+			return char;
 		};
-
-		Promise.resolve(0).then(function loop(i) {
-			return new Promise(function(resolve) {
-				if(i < chars.length) {
-					setTimeout(function() {
-						pushChar(chars[i], body);
-						resolve(i+1);
-					}, timing);
-				}
-			})
-			.then(loop);
-		});
+		let stdout = '';
+		const loop = function (i: number) {
+			return (function () {
+				setTimeout(() => {
+					stdout += push(strs[i], body);
+					loop(i + 1);
+				}, timing);
+			});
+		}
+		loop(0);
+		const type = async function (strs: string) {
+			return Promise.resolve(0)
+				.then(function loop(i) {
+					return new Promise(function (resolve) {
+						if(i < strs.length) {
+							setTimeout(function () {
+								stdout += push(strs[i], body);
+								resolve(i + 1);
+							}, timing);
+						} else {
+							setTimeout(function () {
+								push('<br>', body);
+								return 1;
+							}, timing * 3);
+						}
+					})
+					.then(<any>loop);
+				});
+		};
 	};
+
 
 	body.innerHTML = caret;
-	typing('あいうえお　かきくけこ');
+	typing('これをあなたが読んでいる時、');
+	// async function sample() {
+	// 	await typing('これをあなたが読んでいる時、');
+	// 	await typing('わたしはわたしではないだろう。')
+	// }
+	// sample();
+		// .then(()=>typing('', 1200))
+		// .then(()=>typing('このメッセージが表示されたということは、'))
+		// .then(()=>typing('そこにはあなた、わたし、涼宮ハルヒ、朝比奈みくる、'))
+		// .then(()=>typing('古泉一樹が存在しているはずである。'));
 
 
 };
