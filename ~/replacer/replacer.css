@@ -3,7 +3,10 @@
   position: relative;
   vertical-align: baseline; }
 
-.caret {
+#content p {
+  display: inline; }
+
+.caret:after {
   -webkit-animation: caret 0.9s step-end infinite alternate;
           animation: caret 0.9s step-end infinite alternate;
   background-color: black;
