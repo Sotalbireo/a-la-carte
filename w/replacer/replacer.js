@@ -87,13 +87,14 @@ const init = function () {
         const span = document.createElement('span');
         p.appendChild(span);
         return new Promise(function (resolve) {
-            let a = setInterval((function () {
+            const type = setInterval((function () {
                 if (i < strs.length) {
-                    span.innerHTML += strs[i++];
+                    span.innerHTML += strs[i];
+                    i += 1;
                 }
                 else {
                     span.innerHTML += '<br>';
-                    clearInterval(a);
+                    clearInterval(type);
                     setTimeout(resolve, timing * 8);
                 }
             }), timing);

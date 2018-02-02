@@ -18,12 +18,13 @@ const init = function () {
 		p.appendChild(span);
 
 		return new Promise(function (resolve) {
-			let a: any = setInterval((function () {
+			const type: any = setInterval((function () {
 				if (i < strs.length) {
-					span.innerHTML += strs[i++];
+					span.innerHTML += strs[i];
+					i += 1;
 				} else {
 					span.innerHTML += '<br>';
-					clearInterval(a);
+					clearInterval(type);
 					setTimeout(resolve, timing * 8);
 				}
 			}), timing);

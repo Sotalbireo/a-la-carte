@@ -60,14 +60,19 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
+/******/ ({
 
-throw new Error("Module parse failed: Unexpected token (10:8)\nYou may need an appropriate loader to handle this file type.\n| // export as namespace Marked\n| \n| declare namespace Marked {\n| \n| ");
+/***/ 3:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+console.log('test');
+
 
 /***/ })
-/******/ ]);
+
+/******/ });

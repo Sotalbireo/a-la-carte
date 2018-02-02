@@ -8,7 +8,7 @@ import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const dir = {
 	src : path.resolve(__dirname, 'src'),
-	dest: path.resolve(__dirname, '~'),
+	dest: path.resolve(__dirname, 'w'),
 };
 
 const convertExt = {
