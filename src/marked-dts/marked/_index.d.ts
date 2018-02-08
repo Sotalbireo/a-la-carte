@@ -143,7 +143,7 @@ declare namespace Marked {
 		 * @param callback Function called when the markdownString has been fully parsed when using async highlighting
 		 * @return String of compiled HTML
 		 */
-		(src: string, options?: Options, callback?: Function): string;
+		// (src: string, options?: Options, callback?: Function): string;
 
 		/**
 		 * @param src String of markdown source to be compiled
